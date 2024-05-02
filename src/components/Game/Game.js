@@ -14,12 +14,13 @@ function Game() {
   const [guesses, setGuesses] = React.useState([]);
 
   const addGuess = (newGuess) => {
+    console.log(newGuess);
     setGuesses([...guesses, newGuess]);
   };
 
   return (
     <div className="game-wrapper">
-      <Guesses guesses={guesses} />
+      <Guesses guesses={guesses} answer={answer} />
       <GuessInput addGuess={addGuess} />
     </div>
   );
