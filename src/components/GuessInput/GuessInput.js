@@ -1,5 +1,5 @@
 import React from "react";
-function GuessInput({ addGuess }) {
+function GuessInput({ addGuess, gameOver }) {
   const [input, setInput] = React.useState("");
 
   const handleChange = (e) => {
@@ -23,6 +23,7 @@ function GuessInput({ addGuess }) {
         title="5 letter word"
         value={input}
         onChange={handleChange}
+        disabled={gameOver}
       />
     </form>
   );
