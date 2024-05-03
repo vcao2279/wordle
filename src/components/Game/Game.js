@@ -9,7 +9,7 @@ import LostBanner from "../LostBanner";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
 // Pick a random word on every pageload.
-const answer = sample(WORDS);
+let answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
 console.info({ answer });
 
@@ -34,9 +34,21 @@ function Game() {
     setGuesses(nextGuesses);
   };
 
+  const handleReset = () => {
+    answer = sample(WORDS);
+    console.log({ answer });
+    setGuesses([]);
+    setGameStatus("running");
+  };
+
   return (
     <div className="game-wrapper">
       <Guesses guesses={guesses} answer={answer} />
+      {gameStatus !== "running" && (
+        <button className="reset-button" onClick={handleReset}>
+          Reset
+        </button>
+      )}
       <GuessInput addGuess={addGuess} gameOver={gameOver} />
       {gameStatus === "won" && <WonBanner numberOfGuesses={guesses.length} />}
       {gameStatus === "lost" && <LostBanner answer={answer} />}
