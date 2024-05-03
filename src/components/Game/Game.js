@@ -4,7 +4,9 @@ import { sample } from "../../utils";
 import { WORDS } from "../../data";
 import GuessInput from "../GuessInput";
 import Guesses from "../Guesses";
-import { checkGuess } from "../../game-helpers";
+import WonBanner from "../WonBanner";
+import LostBanner from "../LostBanner";
+import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -13,53 +15,31 @@ console.info({ answer });
 
 function Game() {
   const [guesses, setGuesses] = React.useState([]);
-  const [winner, setWinner] = React.useState(false);
-  const [loser, setLoser] = React.useState(false);
+  const [gameStatus, setGameStatus] = React.useState("running");
 
-  const gameOver = winner || loser;
+  const gameOver = gameStatus !== "running";
 
   const addGuess = (newGuess) => {
     console.log(newGuess);
+    const nextGuesses = [...guesses, newGuess];
 
-    const letters = checkGuess(answer, newGuess.toUpperCase());
-
-    const isWinner = letters.every((letter) => letter.status === "correct");
-
-    if (isWinner) {
-      setWinner(true);
+    if (newGuess === answer) {
+      setGameStatus("won");
     }
 
     // if there are already 5 guesses, and this last guess is incorrect, then is loser
-    if (guesses.length === 5) {
-      setLoser(true);
+    if (nextGuesses.length >= NUM_OF_GUESSES_ALLOWED) {
+      setGameStatus("lost");
     }
-
-    setGuesses([...guesses, newGuess]);
+    setGuesses(nextGuesses);
   };
-
-  const winBanner = (
-    <div className="happy banner">
-      <p>
-        <strong>Congratulations!</strong> Got it in
-        <strong>{guesses.length} guesses</strong>.
-      </p>
-    </div>
-  );
-
-  const loseBanner = (
-    <div className="sad banner">
-      <p>
-        Sorry, the correct answer is <strong>LEARN</strong>.
-      </p>
-    </div>
-  );
 
   return (
     <div className="game-wrapper">
       <Guesses guesses={guesses} answer={answer} />
       <GuessInput addGuess={addGuess} gameOver={gameOver} />
-      {winner && winBanner}
-      {loser && loseBanner}
+      {gameStatus === "won" && <WonBanner numberOfGuesses={guesses.length} />}
+      {gameStatus === "lost" && <LostBanner answer={answer} />}
     </div>
   );
 }

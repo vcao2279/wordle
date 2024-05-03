@@ -1,19 +1,23 @@
 import React from "react";
 import { checkGuess } from "../../game-helpers";
+import { range } from "../../utils";
 
-const NUMBER_OF_LETTERS = 5;
+function Cell({ letter, status }) {
+  const className = status ? `cell ${status}` : "cell";
+  return <span className={className}>{letter}</span>;
+}
 
 function Guess({ guess, answer }) {
-  const letters = guess
-    ? checkGuess(guess, answer)
-    : Array(NUMBER_OF_LETTERS).fill({ letter: "", status: "" });
+  const letters = checkGuess(guess, answer);
 
   return (
     <p key={crypto.randomUUID()} className="guess">
-      {letters.map((i) => (
-        <span key={crypto.randomUUID()} className={`cell ${i.status}`}>
-          {i.letter}
-        </span>
+      {range(5).map((i) => (
+        <Cell
+          key={i}
+          letter={letters ? letters[i].letter : undefined}
+          status={letters ? letters[i].status : undefined}
+        />
       ))}
     </p>
   );

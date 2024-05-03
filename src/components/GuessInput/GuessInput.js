@@ -17,9 +17,10 @@ function GuessInput({ addGuess, gameOver }) {
     <form className="guess-input-wrapper" onSubmit={handleSubmit}>
       <label htmlFor="guess-input">Enter Guess:</label>
       <input
+        required
         type="text"
         id="guess-input"
-        pattern="^.{5}$"
+        pattern="[a-zA-Z]{5}"
         title="5 letter word"
         value={input}
         onChange={handleChange}
